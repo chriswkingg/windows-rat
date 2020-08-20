@@ -31,7 +31,7 @@ void Shell() {
             break;
         } else {
             //execute command
-            FILE *file;
+            FILE *file; //file is basically just used as a string stream
             file = _popen(buffer, "r");
             
             //read response from stream ("file" in this case)
