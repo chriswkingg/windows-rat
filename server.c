@@ -9,8 +9,8 @@
 
 int main() {
     int sock, clientSock;
-    char *buffer = malloc(sizeof(char) * 1024);
-    char *response = malloc(sizeof(char) * 18384);
+    char buffer[1024];
+    char response[18384];
     struct sockaddr_in serverAddress, clientAddress;
     int optval = 1;
     socklen_t clientLength;
@@ -41,7 +41,7 @@ int main() {
 
         //get command
         fgets(buffer, sizeof(buffer), stdin);
-        strtok(buffer, '\n'); //remove \n from string
+        strtok(buffer, "\n"); //remove \n from string
 
         //send
         write(clientSock, buffer, sizeof(buffer));

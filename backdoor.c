@@ -14,9 +14,9 @@
 int sock;
 
 void Shell() {
-    char *buffer = malloc(sizeof(char)*1024);
-    char *container = malloc(sizeof(char)*1024);
-    char *totalResponse = malloc(sizeof(char)*18384);
+    char buffer[1024];
+    char container[1024];
+    char totalResponse[18384];
 
     while(1) {
         //set all values to 0
@@ -45,9 +45,6 @@ void Shell() {
     }
     
     //exit program
-    free(buffer);
-    free(container);
-    free(totalResponse);
     closesocket(sock);
     WSACleanup();
     exit(0);
