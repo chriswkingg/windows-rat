@@ -30,4 +30,30 @@ int main() {
     listen(sock, 5); //takes in sock and max num of connections
     clientLength = sizeof(clientAddress);
     client_socket = accept(sock, (struct sockaddr *) &clientAddress, &clientLength);
+
+    //main loop
+    while(1) {
+        //clear buffer and response
+        memset(&buffer, 0, sizeof(buffer));
+        memset(&response, 0, sizeof(response));
+
+        printf("*Shell#%s~$: ", inet_ntoa(client_address.sin_addr));
+
+        //get command
+        fgets(buffer, sizeof(buffer), stdin);
+        strtok(buffer, '\n'); //remove \n from string
+
+        //send
+        write(clientSock, buffer, sizeof(buffer));
+        if(strncmp("q", buffer, 1) == 0) {
+            return 0;
+        } else {
+            //receive response
+            //MAG_WAITALL blocks process until response
+            recv(client_socket, response, sizeof(response), MSG_WAITALL); 
+
+            printf("%s", response);
+        }
+    }
+    return 0;
 }
